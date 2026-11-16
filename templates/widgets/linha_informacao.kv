@@ -1,0 +1,26 @@
+<LinhaInformacao>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: '34dp'
+    spacing: '8dp'
+
+    Label:
+        text: root.rotulo
+        font_size: '14sp'
+        color: 0.85, 0.92, 1, 1
+        size_hint_x: None
+        width: '190dp'
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+
+    Label:
+        text: root.valor
+        font_size: '16sp'
+        bold: True
+        color: 1, 1, 1, 1
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+        shorten: True
+        shorten_from: 'right'

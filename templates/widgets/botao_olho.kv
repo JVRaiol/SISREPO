@@ -1,0 +1,17 @@
+#:import dp kivy.metrics.dp
+
+<BotaoOlho>:
+    canvas:
+        Color:
+            rgba: 0.35, 0.35, 0.35, 1
+        Line:
+            ellipse: self.x, self.center_y - dp(7), self.width, dp(14)
+            width: 1.5
+        Ellipse:
+            pos: self.center_x - dp(4), self.center_y - dp(4)
+            size: dp(8), dp(8)
+        Color:
+            rgba: 0.35, 0.35, 0.35, 0 if self.aberto else 1
+        Line:
+            points: self.x, self.y + dp(4), self.right, self.top - dp(4)
+            width: 1.5

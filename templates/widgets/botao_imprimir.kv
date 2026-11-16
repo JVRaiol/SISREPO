@@ -1,0 +1,48 @@
+#:import dp kivy.metrics.dp
+
+<BotaoImprimir>:
+    size_hint: None, None
+    width: '36dp'
+    height: '36dp'
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 0.35) if self.state == 'down' else ((1, 1, 1, 0.20) if self.hovered else (0, 0, 0, 0))
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [18]
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        # folha de cima (entrando na impressora)
+        Line:
+            points:
+                [
+                self.center_x - dp(4), self.center_y + dp(3),
+                self.center_x - dp(4), self.center_y + dp(8),
+                self.center_x + dp(4), self.center_y + dp(8),
+                self.center_x + dp(4), self.center_y + dp(3)
+                ]
+            width: dp(1.5)
+            cap: 'round'
+            joint: 'round'
+        # corpo da impressora
+        Line:
+            rounded_rectangle: self.center_x - dp(8), self.center_y - dp(5), dp(16), dp(8), dp(2)
+            width: dp(1.5)
+        # folha de baixo (saindo da impressora)
+        Line:
+            points:
+                [
+                self.center_x - dp(4), self.center_y - dp(5),
+                self.center_x - dp(4), self.center_y - dp(8),
+                self.center_x + dp(4), self.center_y - dp(8),
+                self.center_x + dp(4), self.center_y - dp(5)
+                ]
+            width: dp(1.5)
+            cap: 'round'
+            joint: 'round'
+        # luzinha do corpo
+        Ellipse:
+            pos: self.center_x + dp(4.5), self.center_y - dp(1.5)
+            size: dp(2), dp(2)

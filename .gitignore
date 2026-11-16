@@ -1,0 +1,24 @@
+
+# Credenciais
+.env
+.env.*
+!.env.simulation
+
+# Dados locais
+registroUser.json
+relatorios_pdf/
+
+# Arquivos temporários Python
+__pycache__/
+*.py[cod]
+
+# Ambientes virtuais
+.venv/
+venv/
+
+# Compilação
+build/
+dist/
+
+# Configurações locais
+.vscode/

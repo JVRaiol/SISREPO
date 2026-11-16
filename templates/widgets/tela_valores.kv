@@ -1,0 +1,59 @@
+TelaValores:
+    orientation: 'horizontal'
+
+    MenuLateral:
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Cabecalho:
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 1
+
+            PainelCinza:
+                size_hint_x: 0.5
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: '40dp'
+                    spacing: '8dp'
+
+                    BotaoCasinha:
+                        pos_hint: {'center_y': 0.5}
+                        on_release: app.voltar_tela_principal()
+
+                    Label:
+                        text: 'Voltar para a tela principal'
+                        font_size: '13sp'
+                        color: 0.25, 0.25, 0.25, 1
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+
+                TituloSecao:
+                    text: 'Alterar valor'
+
+                LinhaCampo:
+                    rotulo: 'Produto:'
+                    SeletorFiltro:
+                        id: seletor_produto
+                        text: 'Escolha...'
+
+                LinhaCampo:
+                    rotulo: 'Novo valor:'
+                    CampoInput:
+                        id: input_valor
+                        hint_text: 'Ex.: 0,25'
+
+                LinhaCentralizada:
+                    BotaoPadrao:
+                        text: 'Salvar'
+                        on_release: root.salvar()
+
+            PainelAzul:
+                id: painel
+                size_hint_x: 0.5
+                vazio: True

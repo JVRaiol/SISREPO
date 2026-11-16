@@ -1,0 +1,96 @@
+TelaChat:
+    orientation: 'horizontal'
+
+    MenuLateral:
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Cabecalho:
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 1
+            padding: '14dp', '10dp', '14dp', '14dp'
+            spacing: '8dp'
+            canvas.before:
+                Color:
+                    rgba: 0.9, 0.9, 0.9, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: '40dp'
+                spacing: '8dp'
+
+                BotaoCasinha:
+                    pos_hint: {'center_y': 0.5}
+                    on_release: app.voltar_tela_principal()
+
+                Label:
+                    text: 'Voltar para a tela principal'
+                    font_size: '13sp'
+                    color: 0.25, 0.25, 0.25, 1
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'middle'
+
+                TextoClicavel:
+                    text: 'Nova conversa'
+                    font_size: '13sp'
+                    halign: 'right'
+                    size_hint_x: None
+                    width: '110dp'
+                    on_release: root.nova_conversa()
+
+            TituloSecao:
+                text: 'Assistente'
+
+            ScrollView:
+                id: scroll
+                do_scroll_x: False
+                do_scroll_y: True
+                bar_width: '6dp'
+                scroll_type: ['bars', 'content']
+
+                GridLayout:
+                    id: lista_mensagens
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: '8dp'
+                    padding: '2dp', '4dp', '8dp', '4dp'
+
+            Label:
+                id: lbl_status
+                text: ''
+                italic: True
+                font_size: '12sp'
+                color: 0.35, 0.35, 0.35, 1
+                size_hint_y: None
+                height: '18dp'
+                text_size: self.size
+                halign: 'left'
+                valign: 'middle'
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: '44dp'
+                spacing: '8dp'
+
+                CampoInput:
+                    id: input_mensagem
+                    hint_text: 'Escreva sua mensagem...'
+                    height: '44dp'
+                    on_text_validate: root.enviar()
+
+                BotaoPadrao:
+                    id: btn_enviar
+                    text: 'Enviar'
+                    size_hint_x: None
+                    width: '100dp'
+                    on_release: root.enviar()

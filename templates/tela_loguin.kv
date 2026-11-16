@@ -1,0 +1,236 @@
+#:import dp kivy.metrics.dp
+
+TelaLoguin:
+
+    canvas.before:
+        Color:
+            rgba: 0.05, 0.10, 0.25, 0.45
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    CartaoLoguin:
+        height: '480dp'
+        ativo: root.tela_atual == 'loguin'
+
+        Label:
+            text: 'SISREPO'
+            font_size: '34sp'
+            bold: True
+            color: 0.05, 0.10, 0.25, 1
+            size_hint_y: None
+            height: '48dp'
+
+        Label:
+            text: 'Entre ou com seu nome de usuário, ou nome completo (tudo em maiúsculo), ou número de matrícula '
+            font_size: '13sp'
+            color: 0.10, 0.35, 0.65, 1
+            size_hint_y: None
+            text_size: self.width, None
+            height: '44dp'
+
+        CampoLoguin:
+            id: input_loguin
+            hint_text: 'Usuário, nome completo ou matrícula'
+            on_text_validate: input_senha.focus = True
+
+        FloatLayout:
+            size_hint_y: None
+            height: '46dp'
+
+            CampoLoguin:
+                id: input_senha
+                hint_text: 'Senha'
+                password: True
+                padding: ['12dp', '12dp', '44dp', '12dp']
+                pos_hint: {'x': 0, 'y': 0}
+                on_text_validate: app.tentar_loguin()
+
+            BotaoOlho:
+                size_hint: None, None
+                size: '28dp', '28dp'
+                pos_hint: {'right': 0.98, 'center_y': 0.5}
+                on_release:
+                    self.aberto = not self.aberto
+                    input_senha.password = not self.aberto
+                    input_senha.focus = True
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: '30dp'
+            spacing: '6dp'
+
+            Label:
+                text: 'Turno:'
+                font_size: '15sp'
+                bold: True
+                color: 0.05, 0.10, 0.25, 1
+                size_hint_x: None
+                width: '60dp'
+
+            CheckBox:
+                id: check_manha
+                group: 'turno'
+                color: 0.05, 0.35, 0.75, 1
+                size_hint_x: None
+                width: '32dp'
+
+            TextoClicavel:
+                text: 'Manhã'
+                on_release: check_manha.active = True
+
+            CheckBox:
+                id: check_tarde
+                group: 'turno'
+                color: 0.05, 0.35, 0.75, 1
+                size_hint_x: None
+                width: '32dp'
+
+            TextoClicavel:
+                text: 'Tarde'
+                on_release: check_tarde.active = True
+
+        LinkTexto:
+            text: '[u]Esqueci minha senha[/u]'
+            on_release: app.mostrar_recuperacao()
+
+        Label:
+            id: lbl_erro
+            text: ''
+            font_size: '14sp'
+            color: 0.80, 0.10, 0.10, 1
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_y: None
+            height: '40dp'
+
+        BotaoAzulEscuro:
+            text: 'Entrar'
+            on_release: app.tentar_loguin()
+
+    CartaoLoguin:
+        height: '470dp'
+        ativo: root.tela_atual == 'recuperacao'
+
+        Label:
+            text: 'Recuperar senha'
+            font_size: '28sp'
+            bold: True
+            color: 0.05, 0.10, 0.25, 1
+            size_hint_y: None
+            height: '48dp'
+
+        Label:
+            text: 'Confirme seus dados para continuar'
+            font_size: '13sp'
+            color: 0.10, 0.35, 0.65, 1
+            size_hint_y: None
+            text_size: self.width, None
+            height: '24dp'
+
+        CampoLoguin:
+            id: input_rec_nome
+            hint_text: 'Nome completo (tudo em maiúsculo)'
+            on_text_validate: input_rec_matricula.focus = True
+
+        CampoLoguin:
+            id: input_rec_matricula
+            hint_text: 'Matrícula'
+            on_text_validate: input_rec_data.focus = True
+
+        CampoLoguin:
+            id: input_rec_data
+            hint_text: 'Data de nascimento (dd/mm/aaaa)'
+            on_text_validate: app.tentar_recuperar_senha()
+
+        Label:
+            id: lbl_msg_recuperacao
+            text: ''
+            font_size: '14sp'
+            color: 0.80, 0.10, 0.10, 1
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_y: None
+            height: '40dp'
+
+        BotaoAzulEscuro:
+            text: 'Confirmar dados'
+            on_release: app.tentar_recuperar_senha()
+
+        LinkTexto:
+            text: '[u]Voltar para o loguin[/u]'
+            on_release: app.voltar_loguin()
+
+    CartaoLoguin:
+        height: '440dp'
+        ativo: root.tela_atual == 'nova_senha'
+
+        Label:
+            id: lbl_nome_operador
+            text: ''
+            font_size: '20sp'
+            bold: True
+            color: 0.05, 0.10, 0.25, 1
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_y: None
+            height: '60dp'
+
+        Label:
+            text: 'Defina a sua nova senha'
+            font_size: '13sp'
+            color: 0.10, 0.35, 0.65, 1
+            size_hint_y: None
+            text_size: self.width, None
+            height: '24dp'
+
+        FloatLayout:
+            size_hint_y: None
+            height: '46dp'
+
+            CampoLoguin:
+                id: input_nova_senha
+                hint_text: 'Nova senha'
+                password: True
+                padding: ['12dp', '12dp', '44dp', '12dp']
+                pos_hint: {'x': 0, 'y': 0}
+                on_text_validate: input_confirma_senha.focus = True
+
+            BotaoOlho:
+                size_hint: None, None
+                size: '28dp', '28dp'
+                pos_hint: {'right': 0.98, 'center_y': 0.5}
+                on_release:
+                    self.aberto = not self.aberto
+                    input_nova_senha.password = not self.aberto
+                    input_confirma_senha.password = not self.aberto
+                    input_nova_senha.focus = True
+
+        CampoLoguin:
+            id: input_confirma_senha
+            hint_text: 'Confirmar nova senha'
+            password: True
+            on_text_validate: app.tentar_alterar_senha()
+
+        Label:
+            id: lbl_msg_nova_senha
+            text: ''
+            font_size: '14sp'
+            color: 0.80, 0.10, 0.10, 1
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_y: None
+            height: '40dp'
+
+        BotaoAzulEscuro:
+            text: 'Salvar nova senha'
+            on_release: app.tentar_alterar_senha()
+
+        LinkTexto:
+            text: '[u]Cancelar[/u]'
+            on_release: app.voltar_loguin()

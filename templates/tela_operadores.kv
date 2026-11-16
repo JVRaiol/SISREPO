@@ -1,0 +1,233 @@
+TelaOperadores:
+    orientation: 'horizontal'
+
+    MenuLateral:
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Cabecalho:
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 1
+
+            PainelCinza:
+                size_hint_x: 0.5
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: '40dp'
+                    spacing: '8dp'
+
+                    BotaoCasinha:
+                        pos_hint: {'center_y': 0.5}
+                        on_release: app.voltar_tela_principal()
+
+                    Label:
+                        text: 'Voltar para a tela principal'
+                        font_size: '13sp'
+                        color: 0.25, 0.25, 0.25, 1
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+
+                TituloSecao:
+                    text: 'Buscar um operador por:'
+
+                BarraDecorativaAzul:
+                    rotulo: 'Nome:'
+                    largura_rotulo: 110
+                    CampoInput:
+                        id: campo_nome
+                        input_filter: lambda texto, from_undo: texto.upper()
+
+                BarraDecorativaAzul:
+                    rotulo: 'Turno:'
+                    largura_rotulo: 110
+                    SeletorFiltro:
+                        id: campo_turno
+                        text: 'Todos'
+                        values: ['Todos', 'Manhã', 'Tarde']
+
+                BarraDecorativaAzul:
+                    rotulo: 'Matrícula:'
+                    largura_rotulo: 110
+                    CampoInput:
+                        id: campo_matricula
+                        input_filter: 'int'
+
+                BarraDecorativaAzul:
+                    rotulo: 'Cargo:'
+                    largura_rotulo: 110
+                    SeletorFiltro:
+                        id: campo_cargo
+                        text: 'Todos'
+                        values: ['Todos', 'Estagiário de Informática', 'Estagiário de Biblioteconomia', 'Estagiário de Nível Médio', 'Bibliotecário', 'Técnico em Informática', 'Técnico Cultural']
+
+                LinhaCentralizada:
+
+                    BotaoPadrao:
+                        markup: True
+                        text: '[font=fonts/NotoEmoji-Regular.ttf]🔍[/font] Buscar'
+                        on_release: root.buscar_operador_por_filtro()
+
+                LinhaDivisoriaSessao:
+
+                TituloSecao:
+                    text: 'Cadastrar novo operador:'
+
+                LinhaCampo:
+                    rotulo: 'Nome:'
+                    CampoInput:
+                        id: novo_nome
+                        input_filter: lambda texto, from_undo: texto.upper()
+
+                LinhaCampo:
+                    rotulo: 'Nome de Usuário:'
+                    CampoInput:
+                        id: novo_nome_usuario
+
+                LinhaCampo:
+                    rotulo: 'Cargo:'
+                    SeletorFiltro:
+                        id: novo_cargo
+                        text: 'Selecione'
+                        values: ['Estagiário de Informática', 'Estagiário de Biblioteconomia', 'Estagiário de Nível Médio', 'Bibliotecário', 'Técnico em Informática', 'Técnico Cultural']
+
+                LinhaCampo:
+                    rotulo: 'Turno Lotado:'
+                    SeletorFiltro:
+                        id: novo_turno
+                        text: 'Selecione'
+                        values: ['Manhã', 'Tarde']
+
+                LinhaCampo:
+                    rotulo: 'Matrícula:'
+                    CampoInput:
+                        id: novo_matricula
+                        input_filter: 'int'
+
+                LinhaCampo:
+                    rotulo: 'Data de Nascimento:'
+                    CampoInput:
+                        id: novo_nascimento
+                        hint_text: 'DD/MM/AAAA'
+
+                LinhaCampo:
+                    rotulo: 'Senha:'
+
+                    FloatLayout:
+
+                        CampoInput:
+                            id: novo_senha
+                            password: True
+                            pos_hint: {'x': 0, 'center_y': 0.5}
+                            padding: ['8dp', '7dp', '38dp', '7dp']
+
+                        BotaoOlho:
+                            size_hint: None, None
+                            size: '24dp', '24dp'
+                            pos_hint: {'right': 0.98, 'center_y': 0.5}
+                            on_release:
+                                self.aberto = not self.aberto
+                                novo_senha.password = not self.aberto
+                                novo_senha.focus = True
+
+                LinhaCampo:
+                    rotulo: 'confirmar Senha:'
+
+                    FloatLayout:
+
+                        CampoInput:
+                            id: novo_senha_confirmar
+                            password: True
+                            pos_hint: {'x': 0, 'center_y': 0.5}
+                            padding: ['8dp', '7dp', '38dp', '7dp']
+
+                        BotaoOlho:
+                            size_hint: None, None
+                            size: '24dp', '24dp'
+                            pos_hint: {'right': 0.98, 'center_y': 0.5}
+                            on_release:
+                                self.aberto = not self.aberto
+                                novo_senha_confirmar.password = not self.aberto
+                                novo_senha_confirmar.focus = True
+
+
+                LinhaCentralizada:
+
+                    BotaoPadrao:
+                        text: 'Cadastrar'
+                        on_release: root.cadastrar_operador()
+
+            PainelAzul:
+                id: painel
+                size_hint_x: 0.5
+                vazio: root.pagina == 'vazio'
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height if root.pagina == 'lista' else 0
+                    opacity: 1 if root.pagina == 'lista' else 0
+                    disabled: root.pagina != 'lista'
+                    spacing: '10dp'
+
+                    TituloPainel:
+                        text: 'Operadores' if root.operadores_exibidos else 'Nenhum operador encontrado.'
+
+                    SeparadorPainel:
+
+                    ListaOperadores:
+                        id: lista
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height if root.pagina == 'detalhes' else 0
+                    opacity: 1 if root.pagina == 'detalhes' else 0
+                    disabled: root.pagina != 'detalhes'
+                    spacing: '10dp'
+
+                    TituloPainel:
+                        text: 'Informações do operador'
+
+                    SeparadorPainel:
+
+                    LinhaInformacao:
+                        rotulo: 'Nome:'
+                        valor: root.operador_exibido['nome'] or '-'
+
+                    LinhaInformacao:
+                        rotulo: 'Matrícula:'
+                        valor: root.operador_exibido['matricula'] or '-'
+
+                    LinhaInformacao:
+                        rotulo: 'Cargo:'
+                        valor: root.operador_exibido['cargo'] or '-'
+
+                    LinhaInformacao:
+                        rotulo: 'Turno lotado:'
+                        valor: root.operador_exibido['turno'] or '-'
+
+                    LinhaInformacao:
+                        rotulo: 'Cadastrado em:'
+                        valor: root.operador_exibido['cadastro'] or '-'
+
+                    SeparadorPainel:
+
+                    LinhaCentralizada:
+
+                        BotaoPerigo:
+                            text: 'Deletar operador'
+                            on_release: root.pedir_exclusao()
+
+                    LinhaCentralizada:
+
+                        BotaoPadrao:
+                            text: 'Voltar'
+                            on_release: root.mostrar_lista()
+            
+                Widget:

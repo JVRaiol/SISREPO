@@ -1,0 +1,16 @@
+<BotaoPainel>:
+    size_hint_y: None
+    height: '44dp'
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    color: 0.05, 0.10, 0.25, 1
+    font_size: '14sp'
+    bold: True
+    canvas.before:
+        Color:
+            rgba: (0.78, 0.78, 0.78, 1) if self.state == 'down' else ((0.88, 0.88, 0.88, 1) if self.hovered else (1, 1, 1, 1))
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10]

@@ -1,0 +1,29 @@
+#:import dp kivy.metrics.dp
+
+<LinhaOperador>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: '56dp'
+    padding: ['14dp', '8dp', '8dp', '8dp']
+    spacing: '10dp'
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Line:
+            rounded_rectangle: self.x, self.y, self.width, self.height, 12
+            width: dp(1.5)
+
+    Label:
+        text: root.nome
+        font_size: '15sp'
+        bold: True
+        color: 1, 1, 1, 1
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'
+        shorten: True
+        shorten_from: 'right'
+
+    BotaoTresPontinhos:
+        pos_hint: {'center_y': 0.5}
+        on_release: root.abrir_menu(self)

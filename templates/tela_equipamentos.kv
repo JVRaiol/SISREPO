@@ -1,0 +1,293 @@
+TelaEquipamentos:
+    orientation: 'horizontal'
+
+    MenuLateral:
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Cabecalho:
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 1
+
+            PainelCinza:
+                size_hint_x: 0.5
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: '40dp'
+                    spacing: '8dp'
+
+                    BotaoCasinha:
+                        pos_hint: {'center_y': 0.5}
+                        on_release:
+                            app.voltar_tela_principal()
+                            root.limpar_painel_informacoes()
+
+                    Label:
+                        text: 'Voltar para a tela principal'
+                        font_size: '13sp'
+                        color: 0.25, 0.25, 0.25, 1
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+
+                TituloSecao:
+                    text: 'Equipamentos'
+
+                ListaEquipamentos:
+                    id: lista
+
+                TextoVazio:
+                    text: 'Nenhum equipamento cadastrado.'
+                    height: '40dp' if not lista.data else 0
+                    opacity: 1 if not lista.data else 0
+
+                Widget:
+                    size_hint_y: None
+                    height: '18dp'
+
+                LinhaDivisoriaSessao:
+
+                Widget:
+                    size_hint_y: None
+                    height: '18dp'
+
+                TituloSecao:
+                    text: 'Cadastrar novo equipamento'
+
+                LinhaCampo:
+                    rotulo: 'Nome:'
+                    CampoInput:
+                        id: input_nome_equipamento
+                        hint_text: 'Nome do equipamento'
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: '40dp'
+                    spacing: '8dp'
+
+                    OpcaoPagamento:
+                        id: opcao_copia
+                        size_hint_x: 0.34
+                        CheckBox:
+                            id: chk_copia
+                            size_hint_x: None
+                            width: '24dp'
+                            color: 0.10, 0.55, 0.90, 1
+                            on_active: opcao_copia.ativo = self.active
+                        Label:
+                            text: 'Copia?'
+                            font_size: '13sp'
+                            bold: chk_copia.active
+                            color: (0.05, 0.35, 0.70, 1) if chk_copia.active else (0.25, 0.25, 0.25, 1)
+                            text_size: self.size
+                            valign: 'middle'
+                            halign: 'left'
+
+                    OpcaoPagamento:
+                        id: opcao_imprime
+                        size_hint_x: 0.33
+                        CheckBox:
+                            id: chk_imprime
+                            size_hint_x: None
+                            width: '24dp'
+                            color: 0.10, 0.55, 0.90, 1
+                            on_active: opcao_imprime.ativo = self.active
+                        Label:
+                            text: 'Imprime?'
+                            font_size: '13sp'
+                            bold: chk_imprime.active
+                            color: (0.05, 0.35, 0.70, 1) if chk_imprime.active else (0.25, 0.25, 0.25, 1)
+                            text_size: self.size
+                            valign: 'middle'
+                            halign: 'left'
+
+                    OpcaoPagamento:
+                        id: opcao_scaneia
+                        size_hint_x: 0.33
+                        CheckBox:
+                            id: chk_scaneia
+                            size_hint_x: None
+                            width: '24dp'
+                            color: 0.10, 0.55, 0.90, 1
+                            on_active: opcao_scaneia.ativo = self.active
+                        Label:
+                            text: 'Digitaliza?'
+                            font_size: '13sp'
+                            bold: chk_scaneia.active
+                            color: (0.05, 0.35, 0.70, 1) if chk_scaneia.active else (0.25, 0.25, 0.25, 1)
+                            text_size: self.size
+                            valign: 'middle'
+                            halign: 'left'
+
+                LinhaCampo:
+                    rotulo: 'Total de cópias:'
+                    largura_rotulo: 175
+                    height: '40dp' if chk_copia.active else '0dp'
+                    opacity: 1 if chk_copia.active else 0
+                    disabled: not chk_copia.active
+                    CampoInput:
+                        id: input_total_copias
+                        hint_text: '0'
+                        input_filter: 'int'
+                        halign: 'center'
+
+                LinhaCampo:
+                    rotulo: 'Total de impressões:'
+                    largura_rotulo: 175
+                    height: '40dp' if chk_imprime.active else '0dp'
+                    opacity: 1 if chk_imprime.active else 0
+                    disabled: not chk_imprime.active
+                    CampoInput:
+                        id: input_total_impressoes
+                        hint_text: '0'
+                        input_filter: 'int'
+                        halign: 'center'
+
+                LinhaCampo:
+                    rotulo: 'Total de digitalizações:'
+                    largura_rotulo: 175
+                    height: '40dp' if chk_scaneia.active else '0dp'
+                    opacity: 1 if chk_scaneia.active else 0
+                    disabled: not chk_scaneia.active
+                    CampoInput:
+                        id: input_total_digitalizacoes
+                        hint_text: '0'
+                        input_filter: 'int'
+                        halign: 'center'
+
+                LinhaCampo:
+                    rotulo: 'Painel (link):'
+                    CampoInput:
+                        id: input_painel_controle
+                        hint_text: 'Link do painel de controle (opcional)'
+
+                LinhaCentralizada:
+
+                    BotaoPadrao:
+                        text: 'Cadastrar'
+                        on_release: root.cadastrar_equipamento()
+
+            PainelAzul:
+                id: painel
+                size_hint_x: 0.5
+                vazio: root.pagina == 'vazio'
+
+                PaginaPainel:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height if root.pagina == 'informacoes' else 0
+                    opacity: 1 if root.pagina == 'informacoes' else 0
+                    spacing: '10dp'
+
+                    TituloPainel:
+                        text: 'Informações do equipamento'
+
+                    SeparadorPainel:
+
+                    LinhaInformacao:
+                        rotulo: 'Nome:'
+                        valor: root.equipamento_exibido['nome']
+
+                    LinhaInformacao:
+                        rotulo: 'Total de cópias:'
+                        valor: root.equipamento_exibido['total_copias']
+                        height: '34dp' if root.equipamento_exibido['copia'] else 0
+                        opacity: 1 if root.equipamento_exibido['copia'] else 0
+
+                    LinhaInformacao:
+                        rotulo: 'Total de impressões:'
+                        valor: root.equipamento_exibido['total_impressoes']
+                        height: '34dp' if root.equipamento_exibido['imprime'] else 0
+                        opacity: 1 if root.equipamento_exibido['imprime'] else 0
+
+                    LinhaInformacao:
+                        rotulo: 'Total de digitalizações:'
+                        valor: root.equipamento_exibido['total_digitalizacoes']
+                        height: '34dp' if root.equipamento_exibido['scaneia'] else 0
+                        opacity: 1 if root.equipamento_exibido['scaneia'] else 0
+
+                    # só aparece quando o equipamento tem um link cadastrado; o próprio link é clicável
+                    LinhaLink:
+                        rotulo: 'Painel de controle:'
+                        valor: root.equipamento_exibido['painel_controle']
+                        height: '34dp' if root.equipamento_exibido['painel_controle'] else 0
+                        opacity: 1 if root.equipamento_exibido['painel_controle'] else 0
+
+                    SeparadorPainel:
+
+                    LinhaBotoes:
+
+                        BotaoPainel:
+                            text: 'Ativar' if root.equipamento_exibido['pausado'] else 'Pausar'
+                            on_release: root.alternar_pausa()
+
+                        BotaoPainel:
+                            text: 'Alterar dados'
+                            on_release: root.abrir_alteracao()
+
+                        BotaoPerigo:
+                            text: 'Deletar'
+                            on_release: root.pedir_exclusao()
+
+                PaginaPainel:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height if root.pagina == 'alterar' else 0
+                    opacity: 1 if root.pagina == 'alterar' else 0
+                    spacing: '10dp'
+
+                    TituloPainel:
+                        text: 'Alterar dados do equipamento'
+
+                    SeparadorPainel:
+
+                    LinhaEdicao:
+                        id: edita_nome
+                        rotulo: 'Nome:'
+                        valor: root.equipamento_exibido['nome']
+
+                    LinhaEdicao:
+                        id: edita_copias
+                        rotulo: 'Total de cópias:'
+                        valor: root.equipamento_exibido['copias']
+                        numerico: True
+                        height: '44dp' if root.equipamento_exibido['copia'] else 0
+                        opacity: 1 if root.equipamento_exibido['copia'] else 0
+                        disabled: not root.equipamento_exibido['copia']
+
+                    LinhaEdicao:
+                        id: edita_impressoes
+                        rotulo: 'Total de impressões:'
+                        valor: root.equipamento_exibido['impressoes']
+                        numerico: True
+                        height: '44dp' if root.equipamento_exibido['imprime'] else 0
+                        opacity: 1 if root.equipamento_exibido['imprime'] else 0
+                        disabled: not root.equipamento_exibido['imprime']
+
+                    LinhaEdicao:
+                        id: edita_digitalizacoes
+                        rotulo: 'Total de digitalizações:'
+                        valor: root.equipamento_exibido['digitalizacoes']
+                        numerico: True
+                        height: '44dp' if root.equipamento_exibido['scaneia'] else 0
+                        opacity: 1 if root.equipamento_exibido['scaneia'] else 0
+                        disabled: not root.equipamento_exibido['scaneia']
+                    SeparadorPainel:
+
+                    LinhaBotoes:
+
+                        BotaoPainel:
+                            text: 'Salvar'
+                            on_release: root.salvar_alteracoes()
+
+                        BotaoPainel:
+                            text: 'Cancelar'
+                            on_release: root.mostrar_informacoes()
+            
+                Widget:

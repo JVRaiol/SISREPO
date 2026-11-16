@@ -1,0 +1,436 @@
+#:import dp kivy.metrics.dp
+#:import sp kivy.metrics.sp
+
+BoxLayout:
+    orientation: 'horizontal'
+
+    MenuLateral:
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Cabecalho:
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 1
+
+            PainelCinza:
+                size_hint_x: 0.5
+
+                TituloSecao:
+                    text: 'Sistema de Registros da Repografia - SISREPO'
+                    font_size: '20sp'
+                    height: '56dp'
+                    halign: 'center'
+
+                Widget:
+                    size_hint_y: None
+                    height: '8dp'
+
+                BarraDecorativaAzul:
+                    rotulo: 'Cópias'
+                    largura_rotulo: 110
+                    Widget:
+                    CampoInput:
+                        id: input_copias
+                        hint_text: '0' 
+                        input_filter: 'int'
+                        halign: 'center'
+                        size_hint_x: None
+                        width: '60dp'
+                        on_text: app.calcular_e_atualizar_painel()
+
+                BarraDecorativaAzul:
+                    rotulo: 'Impressão'
+                    largura_rotulo: 110
+                    Widget:
+                    CampoInput:
+                        id: input_impressao
+                        hint_text: '0' 
+                        input_filter: 'int'
+                        halign: 'center'
+                        size_hint_x: None
+                        width: '60dp'
+                        on_text: app.calcular_e_atualizar_painel()
+
+                BarraDecorativaAzul:
+                    rotulo: 'Digitalização'
+                    largura_rotulo: 110
+                    Widget:
+                    CampoInput:
+                        id: input_digitalizacao
+                        hint_text: '0' 
+                        input_filter: 'int'
+                        halign: 'center'
+                        size_hint_x: None
+                        width: '60dp'
+                        on_text: app.calcular_e_atualizar_painel()
+
+                BarraDecorativaAzul:
+                    rotulo: 'Encadernação'
+                    largura_rotulo: 110
+                    Widget:
+                    CampoInput:
+                        id: input_encadernacao
+                        hint_text: '0' 
+                        input_filter: 'int'
+                        halign: 'center'
+                        size_hint_x: None
+                        width: '60dp'
+                        on_text: app.calcular_e_atualizar_painel()
+                
+                Widget:
+
+                LinhaDivisoriaSessao:
+
+                TituloSecao:
+                    text: 'Registro de Pix'
+
+                LinhaCampo:
+                    rotulo: 'Nome (Pix):'
+                    largura_rotulo: 95
+                    CampoInput:
+                        id: input_nome_pix
+                        hint_text: 'Nome do pagador'
+
+                LinhaCampo:
+                    rotulo: 'Valor Pix (R$):'
+                    CampoInput:
+                        id: input_valor_pix
+                        hint_text: '0.00'
+                        input_filter: 'float'
+                        halign: 'center'
+
+                LinhaCentralizada:
+
+                    BotaoPadrao:
+                        text: 'Registrar'
+                        on_release: app.registrar_pix()
+
+                Widget:
+
+                LinhaDivisoriaSessao:
+
+                TituloSecao:
+                    text: 'Registro de Promoção'
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: '40dp'
+                    spacing: '8dp'
+
+                    OpcaoPagamento:
+                        id: promo_copias
+                        size_hint_x: 0.5
+                        CheckBox:
+                            id: chk_promo_copias
+                            size_hint_x: None
+                            width: '24dp'
+                            color: 0.10, 0.55, 0.90, 1
+                            on_active: promo_copias.ativo = self.active; app.atualizar_promocao_painel()
+                        Label:
+                            text: 'Cópias'
+                            font_size: '13sp'
+                            bold: chk_promo_copias.active
+                            color: (0.05, 0.35, 0.70, 1) if chk_promo_copias.active else (0.25, 0.25, 0.25, 1)
+                            text_size: self.size
+                            valign: 'middle'
+                            halign: 'left'
+
+                    OpcaoPagamento:
+                        id: promo_impressao
+                        size_hint_x: 0.5
+                        CheckBox:
+                            id: chk_promo_impressao
+                            size_hint_x: None
+                            width: '24dp'
+                            color: 0.10, 0.55, 0.90, 1
+                            on_active: promo_impressao.ativo = self.active; app.atualizar_promocao_painel()
+                        Label:
+                            text: 'Impressão'
+                            font_size: '13sp'
+                            bold: chk_promo_impressao.active
+                            color: (0.05, 0.35, 0.70, 1) if chk_promo_impressao.active else (0.25, 0.25, 0.25, 1)
+                            text_size: self.size
+                            valign: 'middle'
+                            halign: 'left'
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: '40dp'
+                    spacing: '8dp'
+
+                    OpcaoPagamento:
+                        id: promo_digitalizacao
+                        size_hint_x: 0.5
+                        CheckBox:
+                            id: chk_promo_digitalizacao
+                            size_hint_x: None
+                            width: '24dp'
+                            color: 0.10, 0.55, 0.90, 1
+                            on_active: promo_digitalizacao.ativo = self.active; app.atualizar_promocao_painel()
+                        Label:
+                            text: 'Digitalização'
+                            font_size: '13sp'
+                            bold: chk_promo_digitalizacao.active
+                            color: (0.05, 0.35, 0.70, 1) if chk_promo_digitalizacao.active else (0.25, 0.25, 0.25, 1)
+                            text_size: self.size
+                            valign: 'middle'
+                            halign: 'left'
+
+                    OpcaoPagamento:
+                        id: promo_encadernacao
+                        size_hint_x: 0.5
+                        CheckBox:
+                            id: chk_promo_encadernacao
+                            size_hint_x: None
+                            width: '24dp'
+                            color: 0.10, 0.55, 0.90, 1
+                            on_active: promo_encadernacao.ativo = self.active; app.atualizar_promocao_painel()
+                        Label:
+                            text: 'Encadernação'
+                            font_size: '13sp'
+                            bold: chk_promo_encadernacao.active
+                            color: (0.05, 0.35, 0.70, 1) if chk_promo_encadernacao.active else (0.25, 0.25, 0.25, 1)
+                            text_size: self.size
+                            valign: 'middle'
+                            halign: 'left'
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(40) if chk_promo_copias.active else 0
+                    opacity: 1 if chk_promo_copias.active else 0
+                    disabled: not chk_promo_copias.active
+                    spacing: '8dp'
+
+                    RotuloCampo:
+                        text: 'Cópias — Qtd:'
+                        size_hint_x: None
+                        width: '110dp'
+                    CampoInput:
+                        id: promo_qtd_copias
+                        hint_text: '0'
+                        input_filter: 'int'
+                        halign: 'center'
+                        size_hint_x: 0.4
+                        on_text: app.atualizar_promocao_painel()
+                    RotuloCampo:
+                        text: 'Valor (R$):'
+                        size_hint_x: None
+                        width: '75dp'
+                    CampoInput:
+                        id: promo_val_copias
+                        hint_text: '0.00'
+                        input_filter: 'float'
+                        halign: 'center'
+                        size_hint_x: 0.4
+                        on_text: app.atualizar_promocao_painel()
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(40) if chk_promo_impressao.active else 0
+                    opacity: 1 if chk_promo_impressao.active else 0
+                    disabled: not chk_promo_impressao.active
+                    spacing: '8dp'
+
+                    RotuloCampo:
+                        text: 'Impressão — Qtd:'
+                        size_hint_x: None
+                        width: '110dp'
+                    CampoInput:
+                        id: promo_qtd_impressao
+                        hint_text: '0'
+                        input_filter: 'int'
+                        halign: 'center'
+                        size_hint_x: 0.4
+                        on_text: app.atualizar_promocao_painel()
+                    RotuloCampo:
+                        text: 'Valor (R$):'
+                        size_hint_x: None
+                        width: '75dp'
+                    CampoInput:
+                        id: promo_val_impressao
+                        hint_text: '0.00'
+                        input_filter: 'float'
+                        halign: 'center'
+                        size_hint_x: 0.4
+                        on_text: app.atualizar_promocao_painel()
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(40) if chk_promo_digitalizacao.active else 0
+                    opacity: 1 if chk_promo_digitalizacao.active else 0
+                    disabled: not chk_promo_digitalizacao.active
+                    spacing: '8dp'
+
+                    RotuloCampo:
+                        text: 'Digital. — Qtd:'
+                        size_hint_x: None
+                        width: '110dp'
+                    CampoInput:
+                        id: promo_qtd_digitalizacao
+                        hint_text: '0'
+                        input_filter: 'int'
+                        halign: 'center'
+                        size_hint_x: 0.4
+                        on_text: app.atualizar_promocao_painel()
+                    RotuloCampo:
+                        text: 'Valor (R$):'
+                        size_hint_x: None
+                        width: '75dp'
+                    CampoInput:
+                        id: promo_val_digitalizacao
+                        hint_text: '0.00'
+                        input_filter: 'float'
+                        halign: 'center'
+                        size_hint_x: 0.4
+                        on_text: app.atualizar_promocao_painel()
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(40) if chk_promo_encadernacao.active else 0
+                    opacity: 1 if chk_promo_encadernacao.active else 0
+                    disabled: not chk_promo_encadernacao.active
+                    spacing: '8dp'
+
+                    RotuloCampo:
+                        text: 'Encad. — Qtd:'
+                        size_hint_x: None
+                        width: '110dp'
+                    CampoInput:
+                        id: promo_qtd_encadernacao
+                        hint_text: '0'
+                        input_filter: 'int'
+                        halign: 'center'
+                        size_hint_x: 0.4
+                        on_text: app.atualizar_promocao_painel()
+                    RotuloCampo:
+                        text: 'Valor (R$):'
+                        size_hint_x: None
+                        width: '75dp'
+                    CampoInput:
+                        id: promo_val_encadernacao
+                        hint_text: '0.00'
+                        input_filter: 'float'
+                        halign: 'center'
+                        size_hint_x: 0.4
+                        on_text: app.atualizar_promocao_painel()
+
+                LinhaCentralizada:
+
+                    BotaoPadrao:
+                        text: 'Registrar'
+                        on_release: app.registrar_promocao()
+
+            PainelAzul:
+                size_hint_x: 0.5
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: '84dp'
+                    padding: ['16dp', '8dp']
+                    canvas.before:
+                        Color:
+                            rgba: 1, 1, 1, 0.15
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [14]
+
+                    Label:
+                        text: 'OPERADOR'
+                        font_size: '12sp'
+                        bold: True
+                        color: 0.85, 0.93, 1, 1
+                        halign: 'left'
+                        valign: 'middle'
+                        text_size: self.size
+                        size_hint_y: 0.35
+
+                    Label:
+                        id: lbl_operador
+                        text: ''
+                        font_size: sp(26) * app.escala_texto
+                        bold: True
+                        color: 1, 1, 1, 1
+                        halign: 'left'
+                        valign: 'middle'
+                        text_size: self.size
+                        shorten: True
+                        shorten_from: 'right'
+
+                Widget:
+                    size_hint_y: None
+                    height: '8dp'
+
+                LinhaValor:
+                    id: linha_copias
+                    nome: 'Cópias'
+
+                LinhaValor:
+                    id: linha_impressao
+                    nome: 'Impressão'
+
+                LinhaValor:
+                    id: linha_digital
+                    nome: 'Digitalização'
+
+                LinhaValor:
+                    id: linha_encad
+                    nome: 'Encadernação'
+
+                BoxLayout:
+                    id: container_promocao
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: '4dp'
+
+                Label:
+                    id: lbl_total_promocao
+                    text: ''
+                    font_size: sp(22) * app.escala_texto
+                    bold: True
+                    color: 1, 1, 1, 1
+                    halign: 'left'
+                    valign: 'middle'
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: '0dp'
+
+                Widget:
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: max(dp(100), dp(150) * app.escala_texto)
+                    padding: '12dp'
+                    canvas.before:
+                        Color:
+                            rgba: 0.05, 0.30, 0.75, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [18]
+
+                    Label:
+                        text: 'TOTAL DO ATENDIMENTO'
+                        font_size: '13sp'
+                        bold: True
+                        color: 0.53, 0.81, 0.98, 1
+                        size_hint_y: 0.25
+
+                    Label:
+                        id: lbl_total_geral
+                        text: 'R$ 0.00'
+                        font_size: sp(64) * app.escala_texto
+                        bold: True
+                        color: 1, 0.85, 0.2, 1

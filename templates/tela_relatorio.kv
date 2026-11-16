@@ -1,0 +1,80 @@
+TelaRelatorios:
+    orientation: 'horizontal'
+
+    MenuLateral:
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Cabecalho:
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 1
+
+            PainelCinza:
+                size_hint_x: 0.5
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: '40dp'
+                    spacing: '8dp'
+
+                    BotaoCasinha:
+                        pos_hint: {'center_y': 0.5}
+                        on_release: app.voltar_tela_principal()
+
+                    Label:
+                        text: 'Voltar para a tela principal'
+                        font_size: '13sp'
+                        color: 0.25, 0.25, 0.25, 1
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+
+                TituloSecao:
+                    text: 'Totais dos equipamentos'
+
+                # as entradas de cada equipamento são criadas pelo laço do carregar_equipamentos (tela_relatorios.py)
+                BoxLayout:
+                    id: container_equipamentos
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: '6dp'
+
+                LinhaDivisoriaSessao:
+
+                TituloSecao:
+                    text: 'Encadernação'
+
+                LinhaCampo:
+                    rotulo: 'Quantidade:'
+                    CampoInput:
+                        id: input_encadernacao
+                        hint_text: 'Total encadernado'
+                        input_filter: 'int'
+                        on_text: root.atualizar_painel()
+
+                LinhaDivisoriaSessao:
+
+                TituloSecao:
+                    text: 'Observações'
+
+                # campo de várias linhas; o texto é salvo na coluna observacoes da tabela relatorio e vai no PDF
+                CampoInput:
+                    id: input_observacoes
+                    multiline: True
+                    height: '120dp'
+                    hint_text: 'Escreva aqui qualquer observação sobre o turno'
+
+                LinhaCentralizada:
+
+                    BotaoPadrao:
+                        text: 'PDF'
+                        on_release: root.confirmar_geracao()
+
+            PainelAzul:
+                id: painel_azul
+                size_hint_x: 0.5

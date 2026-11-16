@@ -1,0 +1,73 @@
+#:import dp kivy.metrics.dp
+
+<MenuLateral>:
+    orientation: 'vertical'
+    size_hint_x: None
+    width: dp(80) + dp(120) * self.progresso
+    padding: '10dp'
+    spacing: '10dp'
+    canvas.before:
+        Color:
+            rgba: 211/255.0, 211/255.0, 211/255.0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 0, 0, 0, 0.10
+        Rectangle:
+            pos: self.right - dp(1.5), self.y
+            size: dp(1.5), self.height
+
+    Widget:
+        size_hint_y: 0.1
+
+    ItemMenu:
+        icone: 'templates/impressora.png'
+        texto: 'Impressoras'
+        expandido: root.hovered
+        progresso: root.progresso
+        on_release: app.abrir_tela_equipamentos()
+
+    ItemMenu:
+        icone: 'templates/operadores.png'
+        texto: 'Operadores'
+        expandido: root.hovered
+        progresso: root.progresso
+        on_release: app.abrir_tela_operadores()
+
+    ItemMenu:
+        icone: 'templates/relatorio.png'
+        texto: 'Relatório'
+        expandido: root.hovered
+        progresso: root.progresso
+        on_release: app.abrir_tela_relatorios()
+
+    ItemMenu:
+        icone: 'templates/vendas.png'
+        texto: 'Valores'
+        expandido: root.hovered
+        progresso: root.progresso
+        on_release: app.abrir_tela_valores()
+
+    ItemMenu:
+        icone: 'templates/chat.png'
+        texto: 'Arthur AI'
+        expandido: root.hovered
+        progresso: root.progresso
+        on_release: app.abrir_tela_chat()
+    
+    ItemMenu:
+        icone: 'templates/pasta_docs.png'
+        texto: 'Docs'
+        expandido: root.hovered
+        progresso: root.progresso
+        on_release: app.abrir_tela_docs()
+
+    ItemMenu:
+        icone: 'templates/informacoes.png'
+        texto: 'Sobre'
+        expandido: root.hovered
+        progresso: root.progresso
+        on_release: print("Informações clicado!")
+
+    Widget:

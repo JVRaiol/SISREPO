@@ -1,0 +1,25 @@
+#:import dp kivy.metrics.dp
+
+<BotaoTresPontinhos>:
+    size_hint: None, None
+    width: '36dp'
+    height: '36dp'
+    canvas.before:
+        Color:
+            rgba: (1, 1, 1, 0.35) if self.state == 'down' else ((1, 1, 1, 0.20) if self.hovered else (0, 0, 0, 0))
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [18]
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 1
+        Ellipse:
+            pos: self.center_x - dp(2.5), self.center_y + dp(8) - dp(2.5)
+            size: dp(5), dp(5)
+        Ellipse:
+            pos: self.center_x - dp(2.5), self.center_y - dp(2.5)
+            size: dp(5), dp(5)
+        Ellipse:
+            pos: self.center_x - dp(2.5), self.center_y - dp(8) - dp(2.5)
+            size: dp(5), dp(5)

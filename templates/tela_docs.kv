@@ -1,0 +1,140 @@
+
+#:import dp kivy.metrics.dp
+
+TelaDocs:
+    orientation: 'horizontal'
+
+    MenuLateral:
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        Cabecalho:
+
+        FloatLayout:
+            size_hint: 1, 1
+
+            PainelCinza:
+                id: painel_cinza_docs
+                size_hint: 0.5, 1
+                pos_hint: {'x': 0, 'y': 0}
+
+                BoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: '40dp'
+                    spacing: '8dp'
+
+                    BotaoCasinha:
+                        pos_hint: {'center_y': 0.5}
+                        on_release: app.voltar_tela_principal()
+
+                    Label:
+                        text: 'Voltar para a tela principal'
+                        font_size: '13sp'
+                        color: 0.25, 0.25, 0.25, 1
+                        text_size: self.size
+                        halign: 'left'
+                        valign: 'middle'
+
+                TituloSecao:
+                    text: 'Relatórios, últimos 5 dias'
+
+                SeparadorPainel:
+
+                ListaRelatorios:
+                    id: lista_relatorios
+
+                LinhaDivisoriaSessao:
+                    size_hint_y: None
+                    height: dp(2)
+
+                TituloSecao:
+                    text: 'Buscar relatórios por data'
+
+                LinhaCampo:
+                    rotulo: 'Data:'
+                    CampoInput:
+                        id: input_data_relatorio
+                        hint_text: 'DD/MM/AAAA'
+                        size_hint_x: None
+                        width: '500dp'
+
+                LinhaCampo:
+                    rotulo: 'Turno:'
+                    SeletorFiltro:
+                        id: spinner_turno_relatorio
+                        text: 'Selecione'
+                        values: ['Manhã', 'Tarde']
+                        size_hint_x: None
+                        width: '500dp'
+
+                LinhaCentralizada:
+
+                    BotaoPadrao:
+                        text: 'Ver'
+                        on_release: root.ver(input_data_relatorio.text.strip(), spinner_turno_relatorio.text, id)
+
+            PainelAzul:
+                id: painel_azul_docs
+                size_hint: 0.5, 1
+                pos_hint: {'right': 1, 'y': 0}
+                vazio: False
+
+                TituloPainel:
+                    text: 'Arquivos no storage'
+
+                SeparadorPainel:
+
+                ListaDocs:
+                    id: lista_docs
+
+                Widget:
+
+            # BOTÃO DE voltar para a tela original
+            FloatLayout:
+                size_hint: 0.5, 1
+                pos_hint: {'x': 0, 'y': 0}
+
+                Label:
+                    text: 'Voltar'
+                    size_hint: None, None
+                    size: (dp(50), dp(20))
+                    pos_hint: {'right': 0.95, 'y': 0.13}
+                    opacity: 1 if root.mostrar_seta else 0
+                    color: (0, 0, 0, 1)
+                    font_size: '12sp'
+
+                Button:
+                    size_hint: None, None
+                    size: (dp(44), dp(44)) if root.mostrar_seta else (0, 0)
+                    opacity: 1 if root.mostrar_seta else 0
+                    pos_hint: {'right': 0.95, 'y': 0.04}
+
+                    background_normal: ''
+                    background_down: ''
+                    background_color: 0, 0, 0, 0
+
+                    on_release: root.restaurar_painel_cinza()
+
+                    canvas.before:
+                        Color:
+                            rgba: (0.02, 0.06, 0.18, 1) if self.state == 'down' else (0.05, 0.10, 0.25, 1)
+                        Ellipse:
+                            pos: self.pos
+                            size: self.size
+
+                    canvas.after:
+                        Color:
+                            rgba: 1, 1, 1, 1
+
+                        Line:
+                            points: [self.center_x + dp(7), self.center_y, self.center_x - dp(7), self.center_y]
+                            width: dp(1.8)
+                            cap: 'round'
+
+                        Line:
+                            points: [self.center_x - dp(1), self.center_y + dp(6.5), self.center_x - dp(7.5), self.center_y, self.center_x - dp(1), self.center_y - dp(6.5)]
+                            width: dp(1.8)
+                            cap: 'round'
+                            joint: 'round'

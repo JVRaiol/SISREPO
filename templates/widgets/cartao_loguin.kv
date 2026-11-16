@@ -1,0 +1,17 @@
+<CartaoLoguin>:
+    orientation: 'vertical'
+    size_hint: None, None
+    width: '380dp'
+    padding: '28dp'
+    spacing: '12dp'
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5} if self.ativo else {'center_x': 5, 'center_y': 5}
+    opacity: 1 if self.ativo else 0
+    disabled: not self.ativo
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [18]
+

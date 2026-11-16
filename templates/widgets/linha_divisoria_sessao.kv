@@ -1,0 +1,10 @@
+<LinhaDivisoriaSessao>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: '1dp'
+    canvas.before:
+        Color:
+            rgba: 0.75, 0.75, 0.75, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size

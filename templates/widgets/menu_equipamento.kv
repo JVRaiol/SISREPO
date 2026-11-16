@@ -1,0 +1,15 @@
+<MenuEquipamento>:
+    auto_width: False
+    width: '180dp'
+
+    ItemMenuOpcao:
+        text: 'Ver informações'
+        on_release: root.ver_informacoes()
+
+    ItemMenuOpcao:
+        text: 'Ativar equipamento' if root.pausado else 'Pausar equipamento'
+        on_release: root.alternar_pausa()
+
+    ItemMenuPerigo:
+        text: 'Deletar equipamento'
+        on_release: root.deletar()

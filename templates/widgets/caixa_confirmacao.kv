@@ -1,0 +1,47 @@
+#:import Window kivy.core.window.Window
+#:import dp kivy.metrics.dp
+
+<CaixaConfirmacao>:
+    size_hint: None, None
+    size: min(dp(380), Window.width * 0.9), dp(220)
+    auto_dismiss: False
+    title_color: 0.05, 0.10, 0.25, 1
+    title_size: '16sp'
+    background: ''
+    background_color: 1, 1, 1, 1
+    separator_color: 0.80, 0.10, 0.10, 1
+    overlay_color: 0.05, 0.10, 0.25, 0.45
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(16)
+        spacing: dp(14)
+
+        Label:
+            text: root.texto
+            color: 0.05, 0.10, 0.25, 1
+            font_size: '15sp'
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(44)
+            spacing: dp(10)
+
+            Button:
+                text: 'Cancelar'
+                bold: True
+                background_normal: ''
+                background_color: 0.75, 0.75, 0.75, 1
+                color: 0.1, 0.1, 0.1, 1
+                on_release: root.dismiss()
+
+            Button:
+                text: root.texto_botao
+                bold: True
+                background_normal: ''
+                background_color: 0.80, 0.10, 0.10, 1
+                color: 1, 1, 1, 1
+                on_release: root.confirmar()

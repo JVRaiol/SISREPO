@@ -1,0 +1,16 @@
+#:import dp kivy.metrics.dp
+
+<ListaDocs>:
+    viewclass: 'LinhaArquivosStorage'
+    do_scroll_x: False
+    do_scroll_y: False
+    size_hint_y: None
+    height: len(self.data) * dp(60)
+
+    RecycleBoxLayout:
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+        spacing: dp(4)

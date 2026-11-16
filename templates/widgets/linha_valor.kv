@@ -1,0 +1,32 @@
+#:import dp kivy.metrics.dp
+#:import sp kivy.metrics.sp
+
+<LinhaValor>:
+    size_hint_y: None
+    height: '56dp'
+    canvas.after:
+        Color:
+            rgba: 1, 1, 1, 0.25
+        Rectangle:
+            pos: self.x, self.y
+            size: self.width, dp(1)
+
+    Label:
+        size_hint_x: 0.65
+        markup: True
+        text: root.nome + ('   [size=14sp][color=b3d1ff]' + root.detalhe + '[/color][/size]' if root.detalhe else '')
+        font_size: sp(22) * app.escala_texto
+        color: 0.85, 0.93, 1, 1
+        halign: 'left'
+        valign: 'middle'
+        text_size: self.size
+
+    Label:
+        size_hint_x: 0.35
+        text: root.valor
+        font_size: sp(28) * app.escala_texto
+        bold: True
+        color: 1, 1, 1, 1
+        halign: 'right'
+        valign: 'middle'
+        text_size: self.size

@@ -1,0 +1,26 @@
+#:import dp kivy.metrics.dp
+
+<BarraDecorativaAzul>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: '52dp'
+    padding: '10dp'
+    spacing: '10dp'
+    canvas.before:
+        Color:
+            rgba: 0.05, 0.10, 0.25, 1
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [12]
+
+    Label:
+        text: root.rotulo
+        font_size: '15sp'
+        color: 1, 1, 1, 1
+        bold: True
+        size_hint_x: None
+        width: dp(root.largura_rotulo)
+        text_size: self.size
+        halign: 'left'
+        valign: 'middle'

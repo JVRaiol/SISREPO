@@ -1,0 +1,21 @@
+#:import max builtins.max
+
+<PainelCinza>:
+    do_scroll_x: False
+    do_scroll_y: True
+    bar_width: '6dp'
+    scroll_type: ['bars', 'content']
+
+    GridLayout:
+        id: conteudo
+        cols: 1
+        size_hint_y: None
+        height: max(self.minimum_height, root.height)
+        spacing: '8dp'
+        padding: ['14dp', '10dp', '14dp', '14dp']
+        canvas.before:
+            Color:
+                rgba: 0.9, 0.9, 0.9, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size

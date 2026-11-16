@@ -1,0 +1,71 @@
+FloatLayout:
+
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: None, None
+        size: '500dp', '500dp'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        spacing: '14dp'
+
+        Image:
+            source: 'templates/logobpav.jpg'
+            fit_mode: 'contain'
+            size_hint_y: None
+            height: '200dp'
+
+        Label:
+            text: 'SISREPO'
+            font_size: '42sp'
+            bold: True
+            color: 0.05, 0.10, 0.25, 1
+            size_hint_y: None
+            height: '56dp'
+
+        Label:
+            text: 'Sistema de Registros da Repografia'
+            font_size: '15sp'
+            color: 0.10, 0.35, 0.65, 1
+            size_hint_y: None
+            height: '24dp'
+
+        BarraProgresso:
+            id: barra
+            size_hint_y: None
+            height: '14dp'
+
+        Label:
+            id: lbl_percentual
+            text: '{}%'.format(int(barra.valor))
+            font_size: '14sp'
+            bold: True
+            color: 0.05, 0.35, 0.75, 1
+            size_hint_y: None
+            height: '24dp'
+
+        Label:
+            id: lbl_status
+            text: 'Iniciando...'
+            font_size: '15sp'
+            color: 0.05, 0.10, 0.25, 1
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_y: None
+            height: '48dp'
+
+        BotaoPadrao:
+            id: btn_tentar
+            text: 'Tentar novamente'
+            opacity: 0
+            disabled: True
+            size_hint: None, None
+            size: '200dp', '44dp'
+            pos_hint: {'center_x': 0.5}
+            on_release: app.iniciar_conexao()

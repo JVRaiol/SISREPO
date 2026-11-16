@@ -1,0 +1,32 @@
+#:import dp kivy.metrics.dp
+
+<BotaoVer>:
+    size_hint: None, None
+    width: '40dp'
+    height: '40dp'
+    canvas.before:
+        # fundo redondo: mais escuro ao clicar, mais claro ao passar o mouse, invisível parado
+        Color:
+            rgba: (0.05, 0.10, 0.25, 0.25) if self.state == 'down' else ((0.05, 0.10, 0.25, 0.12) if self.hovered else (0, 0, 0, 0))
+        Ellipse:
+            pos: self.pos
+            size: self.size
+    canvas:
+        Color:
+            rgba: 0.05, 0.10, 0.25, 1
+        # pálpebra de cima (curva com o ponto de controle acima do centro)
+        Line:
+            bezier: [self.center_x - dp(11), self.center_y, self.center_x, self.center_y + dp(14), self.center_x + dp(11), self.center_y]
+            width: dp(1.8)
+        # pálpebra de baixo (curva espelhada)
+        Line:
+            bezier: [self.center_x - dp(11), self.center_y, self.center_x, self.center_y - dp(14), self.center_x + dp(11), self.center_y]
+            width: dp(1.8)
+        # íris (só o contorno)
+        Line:
+            circle: self.center_x, self.center_y, dp(4.5)
+            width: dp(1.8)
+        # pupila (preenchida)
+        Ellipse:
+            pos: self.center_x - dp(2), self.center_y - dp(2)
+            size: dp(4), dp(4)

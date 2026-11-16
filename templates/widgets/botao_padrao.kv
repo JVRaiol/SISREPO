@@ -1,0 +1,16 @@
+<BotaoPadrao>:
+    size_hint_y: None
+    height: '44dp'
+    font_size: '14sp'
+    bold: True
+    background_normal: ''
+    background_down: ''
+    background_color: 0, 0, 0, 0
+    color: 0.1, 0.1, 0.1, 1
+    canvas.before:
+        Color:
+            rgba: (0.40, 0.70, 0.90, 1) if self.state == 'down' else ((0.46, 0.76, 0.95, 1) if self.hovered else (0.53, 0.81, 0.98, 1))
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [10]

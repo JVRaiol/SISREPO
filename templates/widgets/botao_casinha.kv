@@ -1,0 +1,24 @@
+#:import dp kivy.metrics.dp
+
+<BotaoCasinha>:
+    size_hint: None, None
+    width: '40dp'
+    height: '40dp'
+    canvas.before:
+        Color:
+            rgba: (0.75, 0.75, 0.75, 1) if self.hovered else (0, 0, 0, 0)
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [12]
+    canvas:
+        Color:
+            rgba: 0.05, 0.10, 0.25, 1
+        Line:
+            points: self.center_x - dp(11), self.center_y - dp(10), self.center_x - dp(11), self.center_y + dp(1), self.center_x, self.center_y + dp(12), self.center_x + dp(11), self.center_y + dp(1), self.center_x + dp(11), self.center_y - dp(10)
+            width: dp(1.8)
+            close: True
+            joint: 'round'
+        Line:
+            points: self.center_x - dp(3.5), self.center_y - dp(10), self.center_x - dp(3.5), self.center_y - dp(3), self.center_x + dp(3.5), self.center_y - dp(3), self.center_x + dp(3.5), self.center_y - dp(10)
+            width: dp(1.8)
