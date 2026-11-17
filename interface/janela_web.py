@@ -4,7 +4,10 @@ from pathlib import Path
 
 import webview
 
-ICONE = Path(__file__).resolve().parent.parent / "templates" / "logobpav.ico"
+if getattr(sys, "frozen", False):
+    ICONE = Path(sys._MEIPASS) / "templates" / "logobpav.ico"
+else:
+    ICONE = Path(__file__).resolve().parent.parent / "templates" / "logobpav.ico"
 
 
 def colocar_icone(titulo):
