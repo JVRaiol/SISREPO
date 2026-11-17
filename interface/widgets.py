@@ -28,12 +28,7 @@ from kivy.animation import Animation
 from kivy.clock import Clock
 import weakref
 from kivy.properties import ListProperty, NumericProperty
-import subprocess
-import sys
-import webbrowser
-
-from importlib.util import find_spec
-from pathlib import Path
+from interface.abrir_janela_web import abrir_janela_web
 
 from kivy.properties import ListProperty
 
@@ -360,20 +355,7 @@ class LinhaLink(IgnoraToqueOculto, BoxLayout):
             url = 'http://' + url
 
         try:
-
-            janela_web = Path(__file__).resolve().parent / "janela_web.py"
-
-            if find_spec("webview") is not None:
-
-                subprocess.Popen([
-                    sys.executable,
-                    str(janela_web),
-                    url,
-                    "Painel de controle"
-                ])
-
-            else:
-                webbrowser.open(url)
+            abrir_janela_web(url, "Painel de controle")
 
         except Exception as erro:
             print(f"Erro ao abrir painel de controle: {erro}")

@@ -1,16 +1,10 @@
-import subprocess
-import sys
-import webbrowser
-from importlib.util import find_spec
-from pathlib import Path
+from interface.abrir_janela_web import abrir_janela_web
 
 from kivy.clock import Clock
 from kivy.properties import DictProperty, StringProperty
 from kivy.uix.boxlayout import BoxLayout
 from interface.caixa_de_mensagem import mensagem_sucesso, mensagem_aviso, mensagem_erro, mensagem_confirmacao
 
-
-JANELA_WEB = Path(__file__).resolve().parent / "janela_web.py"
 
 
 def formatar_numero(numero):
@@ -189,12 +183,7 @@ class TelaEquipamentos(BoxLayout):
             return
 
         try:
-            if find_spec("webview") is not None:
-                # janela nativa em processo separado (o Kivy e o pywebview não podem dividir a thread principal)
-                subprocess.Popen([sys.executable, str(JANELA_WEB), url, f"Painel de controle - {self.equipamento_exibido['nome']}"])
-            else:
-                # sem o pywebview instalado, abre no navegador padrão
-                webbrowser.open(url)
+            abrir_janela_web(url, f"Painel de controle - {self.equipamento_exibido['nome']}")
 
         except Exception as erro:
             print(erro)
@@ -204,8 +193,7 @@ class TelaEquipamentos(BoxLayout):
 
         self.confirmar_exclusao_equipamento(
             self.equipamento_exibido["equipamento_id"],
-            self.equipamento_exibido["nome"],
-        )
+            self.equipamento_exibido["nome"],)
 
     def confirmar_exclusao_equipamento(self, equipamento_id, nome):
 
