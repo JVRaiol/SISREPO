@@ -6,7 +6,100 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse
 from vesion import VERSAO_ATUAL
+import subprocess
+import sys
+import textwrap
 
+
+
+SCRIPT_POWERSHELL = r"""
+param(
+    [int]$ProcessIdSISREPO,
+    [string]$SetupPath,
+    [string]$InstallDir,
+    [string]$AppExePath,
+    [string]$SetupLog
+)
+
+$ErrorActionPreference = "Stop"
+
+try {
+
+    # Aguarda o encerramento completo do SISREPO
+    $limite = (Get-Date).AddSeconds(120)
+
+    while (Get-Process -Id $ProcessIdSISREPO -ErrorAction SilentlyContinue) {
+
+        if ((Get-Date) -gt $limite) {
+            throw "O SISREPO não encerrou dentro do tempo esperado."
+        }
+
+        Start-Sleep -Milliseconds 500
+    }
+
+    # Confere se o instalador ainda existe
+    if (-not (Test-Path -LiteralPath $SetupPath -PathType Leaf)) {
+        throw "O instalador não foi encontrado."
+    }
+
+    # Executa a instalação no mesmo diretório do programa atual
+    $argumentosSetup = @(
+        "/SILENT",
+        "/NORESTART",
+        "/SP-",
+        ('/DIR="{0}"' -f $InstallDir),
+        ('/LOG="{0}"' -f $SetupLog)
+    )
+
+    $processoSetup = Start-Process `
+        -FilePath $SetupPath `
+        -ArgumentList $argumentosSetup `
+        -Wait `
+        -PassThru
+
+    # Código zero significa instalação concluída
+    if ($processoSetup.ExitCode -ne 0) {
+        throw "O instalador terminou com o código $($processoSetup.ExitCode)."
+    }
+
+    # Confere se o executável foi instalado
+    if (-not (Test-Path -LiteralPath $AppExePath -PathType Leaf)) {
+        throw "O SISREPO.exe não foi encontrado após a instalação."
+    }
+
+    # Inicia a nova versão
+    Start-Process `
+        -FilePath $AppExePath `
+        -WorkingDirectory $InstallDir
+
+}
+catch {
+
+    $mensagem = (
+        "Não foi possível concluir a atualização do SISREPO.`r`n`r`n" +
+        $_.Exception.Message +
+        "`r`n`r`nO SISREPO não foi reiniciado automaticamente. " +
+        "Tente abri-lo pelo atalho. Consulte o log em:`r`n" +
+        $SetupLog
+    )
+
+    try {
+
+        Add-Type -AssemblyName System.Windows.Forms
+
+        [System.Windows.Forms.MessageBox]::Show(
+            $mensagem,
+            "Atualização do SISREPO",
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Error
+        ) | Out-Null
+
+    }
+    catch {
+        Write-Error $mensagem
+    }
+}
+"""
 
 class AtualizacaoService:
 
@@ -172,3 +265,81 @@ class AtualizacaoService:
         except Exception:
             caminho_temporario.unlink(missing_ok=True)
             raise
+
+    def iniciar_instalacao(self, caminho_instalador):
+
+        if os.name != "nt":
+            raise RuntimeError("A atualização automática está disponível apenas no Windows.")
+
+        if not getattr(sys, "frozen", False):
+            raise RuntimeError(
+                "A instalação automática só pode ser iniciada pelo SISREPO.exe."
+            )
+
+        pasta_download = (
+            Path(os.environ.get("LOCALAPPDATA", str(Path.home())))
+            / "SISREPO"
+            / "updates"
+        ).resolve()
+
+        caminho_instalador = Path(caminho_instalador).resolve()
+
+        if (
+            caminho_instalador.name != self.NOME_INSTALADOR
+            or caminho_instalador.parent != pasta_download
+        ):
+            raise ValueError("Caminho do instalador não autorizado.")
+
+        if not caminho_instalador.is_file():
+            raise FileNotFoundError("O instalador não foi encontrado.")
+
+        # Identifica a instalação atual
+        executavel = Path(sys.executable).resolve()
+        pasta_instalacao = executavel.parent
+
+        if executavel.name.lower() != "sisrepo.exe":
+            raise RuntimeError("Executável principal do SISREPO não identificado.")
+
+        # Localiza o PowerShell do Windows
+        powershell = (
+            Path(os.environ.get("WINDIR", r"C:\Windows"))
+            / "System32"
+            / "WindowsPowerShell"
+            / "v1.0"
+            / "powershell.exe"
+        )
+
+        if not powershell.is_file():
+            raise FileNotFoundError("PowerShell não encontrado.")
+
+        # Arquivos auxiliares da atualização
+        arquivo_script = pasta_download / "instalar_atualizacao.ps1"
+        arquivo_log = pasta_download / "instalacao.log"
+
+        arquivo_script.write_text(
+            textwrap.dedent(SCRIPT_POWERSHELL).lstrip(),
+            encoding="utf-8-sig"
+        )
+
+        # Inicia o processo externo que aguardará o encerramento do SISREPO
+        subprocess.Popen(
+            [
+                str(powershell),
+                "-NoProfile",
+                "-ExecutionPolicy", "Bypass",
+                "-WindowStyle", "Hidden",
+                "-File", str(arquivo_script),
+                str(os.getpid()),
+                str(caminho_instalador),
+                str(pasta_instalacao),
+                str(executavel),
+                str(arquivo_log)
+            ],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            close_fds=True,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)
+        )
+
+        return True

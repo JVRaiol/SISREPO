@@ -205,10 +205,30 @@ class TelaPrincipal(App):
         self.download_em_andamento = False
         self.instalador_baixado = caminho
 
-        mensagem_sucesso(
-            "Download concluído",
-            "O instalador foi baixado e passou na verificação de integridade."
-        )
+        mensagem_confirmacao( "Download concluído", "O instalador foi baixado e validado.\nO SISREPO será fechado para realizar a atualização. Deseja continuar?", ao_confirmar=self._iniciar_instalacao_atualizacao,
+        texto_botao="Instalar agora")
+
+    def _iniciar_instalacao_atualizacao(self):
+
+        if not self.instalador_baixado:
+            mensagem_erro("Atualização","Nenhum instalador foi encontrado.")
+            return
+        
+        try:
+
+            service = AtualizacaoService()
+            service.iniciar_instalacao(self.instalador_baixado)
+
+        except Exception as erro:
+
+            print(f"Erro ao iniciar instalação: {erro}")
+
+            mensagem_erro("Erro na atualização", "Não foi possível iniciar o instalador.\nO SISREPO continuará funcionando normalmente.")
+            
+            return
+
+        # Encerra o SISREPO para permitir a substituição dos arquivos
+        self.stop()
 
     def iniciar_conexao(self):
         ids = self.root.ids
