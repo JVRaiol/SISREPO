@@ -399,8 +399,32 @@ def gerar_pdf_relatorio(resultado, observacoes="", caminho=None, emitido_em=None
 
 def gerar_pdf_relatorio_salvo(relatorio, caminho):
 
-    # recebe o relatório como vem do storage_service (dados gravados no banco) e monta o mesmo layout do PDF original
+    
     emitido_em = datetime.strptime(relatorio["data"], "%d/%m/%Y %H:%M:%S")
+
+    detalhes = relatorio.get("detalhes")
+
+    # relatório gravado com o detalhe por equipamento: desenha o mesmo layout do PDF original
+    if detalhes:
+
+        total_pix = relatorio["total_pix"]
+
+        resultado = {
+            "operador": relatorio["operador"],
+            "turno": relatorio["turno"],
+            "data": emitido_em,
+            "equipamentos": detalhes["equipamentos"],
+            "resumo": detalhes["resumo"],
+            "total_geral": detalhes["total_geral"],
+            "total pix": total_pix,
+            "pagamentos pix": relatorio["registros_pix"],
+            "total especie": detalhes["total_geral"] - total_pix,
+            "avisos": detalhes["avisos"],
+        }
+
+        return gerar_pdf_relatorio(resultado, relatorio["observacoes"], caminho, emitido_em)
+
+    #relatorio sem o layout por equipamento, desenha um layout simplificado com os totais por produto, como se fosse um relatório antigo
 
     promocoes = {}
 

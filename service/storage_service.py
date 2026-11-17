@@ -96,7 +96,8 @@ class StorageService():
                 "total_real_digitalizacao": float(relatorio[15] or 0),
                 "encadernacao": relatorio[16],
                 "total_real_encadernacao": float(relatorio[17] or 0),
-                "observacoes": relatorio[18] or ""
+                "observacoes": relatorio[18] or "",
+                "detalhes": json.loads(relatorio[19]) if relatorio[19] else None
             }
 
             registros_pix = self.registros_pix_repository.buscar_registro_por_operador_data_e_turno(relatorio[1].date(), relatorio[2], relatorio[3])

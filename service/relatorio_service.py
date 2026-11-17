@@ -1,4 +1,5 @@
 from service.relatorio_pdf import gerar_pdf_relatorio
+import json
 
 class RelatorioService:
 
@@ -198,6 +199,13 @@ class RelatorioService:
         dados["totalRealEncadernacao"] = round(resumo["Encadernação"]["total"], 2)
 
         dados["observacoes"] = observacoes or None
+
+        dados["detalhesEquipamentos"] = json.dumps({
+            "equipamentos": resultado["equipamentos"],
+            "resumo": resultado["resumo"],
+            "total_geral": resultado["total_geral"],
+            "avisos": resultado["avisos"],
+        }, default=float)   # default=float serve para converter Decimal em float, caso contrário, o json.dumps vai quebrar a aplicação
 
         totais_antigos = []
         totais_novos = []
