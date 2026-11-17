@@ -9,8 +9,14 @@ from service.database_service import DatabaseService
 from datetime import datetime
 
 import json
+import os
+import sys
 from pathlib import Path
 
+if getattr(sys, "frozen", False):
+    PASTA_DADOS = Path(os.environ.get("APPDATA", str(Path.home()))) / "SISREPO"
+else:
+    PASTA_DADOS = Path(__file__).resolve().parent.parent
 
 
 class JanelaPrincipalService():
@@ -120,7 +126,7 @@ class JanelaPrincipalService():
    
     def consultar_dados_operador_logado(self):
 
-        ARQUIVO_OPERADOR = Path(__file__).resolve().parent.parent / "registroUser.json"
+        ARQUIVO_OPERADOR = PASTA_DADOS / "registroUser.json"
 
         try:
             with open(ARQUIVO_OPERADOR, "r", encoding="utf-8") as arquivoJson:
@@ -135,9 +141,11 @@ class JanelaPrincipalService():
     
     def salvar_operador_logado(self, loguin, turno):
 
+        PASTA_DADOS.mkdir(parents=True, exist_ok=True)
+        
         usuario = self.usuarios_informacoes_repository.buscar_dados_usuario_por_loguin(loguin)
 
-        ARQUIVO_OPERADOR = Path(__file__).resolve().parent.parent / "registroUser.json"
+        ARQUIVO_OPERADOR = PASTA_DADOS / "registroUser.json"
 
         dados = {
             "nome": usuario[2],
