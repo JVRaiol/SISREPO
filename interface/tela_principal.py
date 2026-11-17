@@ -11,7 +11,7 @@ from kivy.properties import NumericProperty
 from kivy.uix.effectwidget import EffectWidget, HorizontalBlurEffect, VerticalBlurEffect
 from controller.janela_principal_controller import janelaPrincipalController
 from controller.equipamentos_controller import EquipamentosController
-from interface.caixa_de_mensagem import mensagem_sucesso, mensagem_aviso, mensagem_erro
+from interface.caixa_de_mensagem import mensagem_sucesso, mensagem_aviso, mensagem_erro, mensagem_confirmacao
 from interface import widgets
 from interface.widgets import LinhaValor
 from interface.tela_relatorio import TelaRelatorios
@@ -27,6 +27,8 @@ from controller.valores_controller import ValoresController
 from interface.montar_assistente import criar_chat_controller
 from interface.tela_docs import TelaDocs
 from controller.storage_controller import StorageController
+import webbrowser
+from service.atualizacao_service import AtualizacaoService
 
 
 class TelaPrincipal(App):
@@ -68,6 +70,13 @@ class TelaPrincipal(App):
         self.total_produtos = 0
         self.total_promocoes = 0
 
+        self.atualizacao_verificada = False
+        self.atualizacao_pendente = None
+        self.sisrepo_pronto = False
+
+        self.download_em_andamento = False
+        self.instalador_baixado = None
+
     def _calcular_escala(self, *args):
 
         largura_painel = (Window.width - dp(80)) / 2
@@ -87,7 +96,119 @@ class TelaPrincipal(App):
         return Builder.load_file("templates/tela_carregamento.kv")
 
     def on_start(self):
+        self.verificar_atualizacoes()
         self.iniciar_conexao()
+
+    def verificar_atualizacoes(self):
+
+        if self.atualizacao_verificada:
+            return
+
+        self.atualizacao_verificada = True
+
+        Thread(
+            target=self._consultar_atualizacao,
+            daemon=True
+        ).start()
+
+
+    def _consultar_atualizacao(self):
+
+        try:
+            service = AtualizacaoService()
+            atualizacao = service.verificar_atualizacao()
+
+        except Exception as erro:
+            print(f"Não foi possível verificar atualizações: {erro}")
+            return
+
+        if atualizacao:
+            Clock.schedule_once(
+                lambda dt, dados=atualizacao: self._receber_atualizacao(dados)
+            )
+
+
+    def _receber_atualizacao(self, atualizacao):
+
+        self.atualizacao_pendente = atualizacao
+
+        if self.sisrepo_pronto:
+            self._mostrar_popup_atualizacao()
+
+
+    def _mostrar_popup_atualizacao(self):
+
+        atualizacao = self.atualizacao_pendente
+
+        if not atualizacao:
+            return
+
+        self.atualizacao_pendente = None
+
+        mensagem_confirmacao(
+            "Atualização disponível",
+            f"Uma nova versão ({atualizacao['versao']}) do SISREPO está disponível.\nDeseja fazer o download agora?",
+            ao_confirmar=lambda dados=atualizacao: self._iniciar_download_atualizacao(dados),
+            texto_botao="Baixar"
+        )
+
+    def _iniciar_download_atualizacao(self, atualizacao):
+
+        if self.download_em_andamento:
+            return
+
+        self.download_em_andamento = True
+
+        Thread(
+            target=self._baixar_instalador,
+            args=(atualizacao,),
+            daemon=True
+        ).start()
+
+
+    def _baixar_instalador(self, atualizacao):
+
+        try:
+
+            service = AtualizacaoService()
+            caminho = service.baixar_instalador(atualizacao)
+
+        except Exception as erro:
+
+            mensagem = str(erro)
+
+            Clock.schedule_once(
+                lambda dt: self._download_falhou(mensagem)
+            )
+
+            return
+
+        Clock.schedule_once(
+            lambda dt: self._download_concluido(caminho)
+        )
+
+
+    def _download_falhou(self, erro):
+
+        self.download_em_andamento = False
+
+        print(f"Erro no download da atualização: {erro}")
+
+        mensagem_erro(
+            "Falha na atualização",
+            "Não foi possível baixar ou validar o instalador.\nTente novamente mais tarde."
+        )
+
+
+    def _download_concluido(self, caminho):
+
+        self.download_em_andamento = False
+        self.instalador_baixado = caminho
+
+        mensagem_sucesso(
+            "Download concluído",
+            "O instalador foi baixado e passou na verificação de integridade."
+        )
 
     def iniciar_conexao(self):
         ids = self.root.ids
@@ -205,6 +326,9 @@ class TelaPrincipal(App):
         tela.disabled = False
 
         tela.ids.lbl_operador.text = self.controller.consultar_operador_logado()
+
+        self.sisrepo_pronto = True
+        self._mostrar_popup_atualizacao()
 
     def mostrar_recuperacao(self):
 

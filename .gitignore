@@ -25,3 +25,5 @@ dist/
 
 #configuraçoes de ambiente virtual de compilacão
 .venv-build/
+
+installer/
