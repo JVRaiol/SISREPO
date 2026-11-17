@@ -17,3 +17,6 @@ PyAutoGUI
 
 # Interface web integrada
 pywebview
+
+# Comunicação com GitHub
+requests
