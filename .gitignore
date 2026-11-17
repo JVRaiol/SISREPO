@@ -22,3 +22,6 @@ dist/
 
 # Configurações locais
 .vscode/
+
+#configuraçoes de ambiente virtual de compilacão
+.venv-build/
