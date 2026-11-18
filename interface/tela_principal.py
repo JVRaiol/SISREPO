@@ -706,3 +706,34 @@ class TelaPrincipal(App):
         self._trocar_tela(self.tela_docs)
 
         self.tela_docs.buscar_documentos_publicos()
+
+    def confirmar_saida(self):
+
+        mensagem_confirmacao( "Sair do SISREPO", "Deseja realmente deslogar do sistema?",
+            ao_confirmar=self.sair_do_programa,
+            texto_botao="Sair")
+
+
+    def sair_do_programa(self):
+        
+        tela = self.tela_principal
+
+        Window.remove_widget(self.root)
+
+        self.camada_desfoque.add_widget(tela)
+        tela.disabled = True
+
+        Window.add_widget(self.camada_desfoque)
+        Window.add_widget(self.tela_loguin)
+
+        self.root = tela
+
+        ids = self.tela_loguin.ids
+
+        ids.input_loguin.text = ""
+        ids.input_senha.text = ""
+        ids.check_manha.active = False
+        ids.check_tarde.active = False
+        ids.lbl_erro.text = ""
+
+        self.voltar_loguin()
