@@ -1,0 +1,63 @@
+#:import dp kivy.metrics.dp
+#:import Window kivy.core.window.Window
+
+<PopupAtualizacao>:
+    title: 'Atualização do SISREPO'
+    size_hint: None, None
+    size: min(dp(460), Window.width * 0.9), dp(330)
+    auto_dismiss: False
+    background: ''
+    background_color: 1, 1, 1, 1
+    title_color: 0.05, 0.10, 0.25, 1
+    title_size: '16sp'
+    separator_color: 0.05, 0.35, 0.75, 1
+    overlay_color: 0.05, 0.10, 0.25, 0.45
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(12)
+
+        Image:
+            source: 'templates/logobpav.jpg'
+            fit_mode: 'contain'
+            size_hint_y: None
+            height: dp(75)
+
+        Label:
+            text: 'Atualizando o SISREPO'
+            font_size: '23sp'
+            bold: True
+            color: 0.05, 0.10, 0.25, 1
+            size_hint_y: None
+            height: dp(35)
+
+        Label:
+            text: 'Baixando nova versão...'
+            font_size: '14sp'
+            color: 0.10, 0.35, 0.65, 1
+            size_hint_y: None
+            height: dp(25)
+
+        BarraProgresso:
+            valor: root.valor
+            size_hint_y: None
+            height: dp(14)
+
+        Label:
+            text: '{}%'.format(int(root.valor))
+            font_size: '14sp'
+            bold: True
+            color: 0.05, 0.35, 0.75, 1
+            size_hint_y: None
+            height: dp(24)
+
+        Label:
+            text: root.status
+            font_size: '13sp'
+            color: 0.05, 0.10, 0.25, 1
+            halign: 'center'
+            valign: 'middle'
+            text_size: self.width, None
+            size_hint_y: None
+            height: dp(35)

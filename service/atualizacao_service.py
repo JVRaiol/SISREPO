@@ -178,7 +178,7 @@ class AtualizacaoService:
             "tamanho": instalador.get("size")
         }
 
-    def baixar_instalador(self, atualizacao):
+    def baixar_instalador(self, atualizacao, ao_progredir=None):
 
         url = atualizacao.get("url_download")
         digest = atualizacao.get("digest")
@@ -187,7 +187,6 @@ class AtualizacaoService:
         if not url:
             raise ValueError("URL de download não encontrada.")
 
-        # verifica se o endereço bate certinho com release oficial do Sisrepo no GitHub
         endereco = urlparse(url)
 
         if (
@@ -199,7 +198,6 @@ class AtualizacaoService:
         ):
             raise ValueError("Endereço de download não autorizado.")
 
-        #exige o SHA-256 informado pelo GitHub
         if not digest or not digest.startswith("sha256:"):
             raise ValueError("A Release não possui SHA-256 válido.")
 
@@ -208,7 +206,6 @@ class AtualizacaoService:
         if not re.fullmatch(r"[a-f0-9]{64}", hash_esperado):
             raise ValueError("Formato de SHA-256 inválido.")
 
-        # Diretório temporário para o instalador
         pasta_download = (
             Path(os.environ.get("LOCALAPPDATA", str(Path.home())))
             / "SISREPO"
@@ -224,8 +221,16 @@ class AtualizacaoService:
 
         hash_calculado = hashlib.sha256()
         bytes_baixados = 0
+        ultimo_percentual = -1
+
+        def informar_progresso(porcentagem, mensagem):
+
+            if ao_progredir:
+                ao_progredir(porcentagem, mensagem)
 
         try:
+
+            informar_progresso(0, "Conectando ao servidor...")
 
             with requests.get(
                 url,
@@ -235,35 +240,90 @@ class AtualizacaoService:
 
                 resposta.raise_for_status()
 
+                tamanho_total = int(
+                    tamanho_esperado
+                    or resposta.headers.get("Content-Length", 0)
+                    or 0
+                )
+
                 with open(caminho_temporario, "wb") as arquivo:
 
-                    for bloco in resposta.iter_content(chunk_size=1024 * 1024):
+                    for bloco in resposta.iter_content(
+                        chunk_size=256 * 1024
+                    ):
 
-                        if bloco:
+                        if not bloco:
+                            continue
 
-                            arquivo.write(bloco)
-                            hash_calculado.update(bloco)
+                        arquivo.write(bloco)
+                        hash_calculado.update(bloco)
 
-                            bytes_baixados += len(bloco)
+                        bytes_baixados += len(bloco)
 
-            # Confere o tamanho recebido
+                        tamanho_mb = bytes_baixados / (1024 * 1024)
+
+                        if tamanho_total > 0:
+
+                            porcentagem = min(
+                                99,
+                                int(bytes_baixados * 100 / tamanho_total)
+                            )
+
+                            tamanho_total_mb = tamanho_total / (1024 * 1024)
+
+                            mensagem = (
+                                f"Baixando atualização... "
+                                f"{tamanho_mb:.1f} MB de "
+                                f"{tamanho_total_mb:.1f} MB"
+                            )
+
+                        else:
+
+                            porcentagem = 0
+
+                            mensagem = (
+                                f"Baixando atualização... "
+                                f"{tamanho_mb:.1f} MB"
+                            )
+
+                        if porcentagem != ultimo_percentual:
+
+                            informar_progresso(
+                                porcentagem,
+                                mensagem
+                            )
+
+                            ultimo_percentual = porcentagem
+
+            informar_progresso(
+                99,
+                "Verificando integridade do instalador..."
+            )
+
             if (
                 tamanho_esperado is not None
                 and bytes_baixados != int(tamanho_esperado)
             ):
-                raise ValueError("O tamanho do instalador não corresponde ao esperado.")
+                raise ValueError(
+                    "O tamanho do instalador não corresponde ao esperado."
+                )
 
-            # Confere a integridade do arquivo
             if hash_calculado.hexdigest().lower() != hash_esperado:
                 raise ValueError("A verificação SHA-256 falhou.")
 
-            # Só disponibiliza o arquivo depois da validação
             os.replace(caminho_temporario, caminho_instalador)
+
+            informar_progresso(
+                100,
+                "Download concluído e verificado!"
+            )
 
             return caminho_instalador
 
         except Exception:
+
             caminho_temporario.unlink(missing_ok=True)
+
             raise
 
     def iniciar_instalacao(self, caminho_instalador):

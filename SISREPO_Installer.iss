@@ -5,7 +5,7 @@
 #define MyAppExeName "SISREPO.exe"
 
 [Setup]
-AppId={{8C7C1A2E-6A6B-4BC1-9F4D-2F6C8E3B91A7}
+AppId={8C7C1A2E-6A6B-4BC1-9F4D-2F6C8E3B91A7}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
@@ -16,7 +16,7 @@ AppUpdatesURL={#MyAppURL}/releases
 DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
-PrivilegesRequired=lowest
+PrivilegesRequired=lowest 
 ArchitecturesAllowed=x64
 OutputDir=installer
 OutputBaseFilename=SISREPO_Setup
