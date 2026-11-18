@@ -1,5 +1,5 @@
 #define MyAppName "SISREPO"
-#define MyAppVersion "1.0.1"
+#define MyAppVersion "1.0.2"
 #define MyAppPublisher "JVRaiol"
 #define MyAppURL "https://github.com/JVRaiol/SISREPO"
 #define MyAppExeName "SISREPO.exe"
