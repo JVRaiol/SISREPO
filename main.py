@@ -1,3 +1,7 @@
+from kivy.config import Config
+
+Config.set('kivy', 'window_icon', 'templates/logobpav.jpg') #aqui no topo, pois evita aparecer o icone do kivy no inicio, nem que seja por alguns segundos
+
 from repository.database import Database
 from service.database_service import DatabaseService
 from service.janela_principal_service import JanelaPrincipalService
