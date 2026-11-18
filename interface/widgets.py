@@ -239,6 +239,11 @@ class CaixaConfirmacao(Popup):
 class CaixaMensagem(Popup):
     texto = StringProperty('')
     tipo = StringProperty('aviso')
+    
+
+class PopupAtualizacao(Popup):
+    valor = NumericProperty(0)
+    status = StringProperty('Preparando download...')
 
 
 class CampoInput(TextInput):

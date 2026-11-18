@@ -15,6 +15,7 @@ def criar_service(ao_progredir):
     # ao_progredir(porcentagem, mensagem) atualiza a barra de progresso
 
     # instancia da classe construtora do banco de dados (conexao e cursor que vao para os repositories)
+    
     database_instance = Database(ao_progredir)
 
     # repassa o database para todos os repositories do projeto

@@ -13,7 +13,7 @@ from controller.janela_principal_controller import janelaPrincipalController
 from controller.equipamentos_controller import EquipamentosController
 from interface.caixa_de_mensagem import mensagem_sucesso, mensagem_aviso, mensagem_erro, mensagem_confirmacao
 from interface import widgets
-from interface.widgets import LinhaValor
+from interface.widgets import LinhaValor, PopupAtualizacao
 from interface.tela_relatorio import TelaRelatorios
 from interface.tela_equipamentos import TelaEquipamentos
 from interface.tela_operadores import TelaOperadores
@@ -76,6 +76,7 @@ class TelaPrincipal(App):
 
         self.download_em_andamento = False
         self.instalador_baixado = None
+        self.popup_download = None
 
     def _calcular_escala(self, *args):
 
@@ -159,6 +160,9 @@ class TelaPrincipal(App):
 
         self.download_em_andamento = True
 
+        self.popup_download = PopupAtualizacao()
+        self.popup_download.open()
+
         Thread(
             target=self._baixar_instalador,
             args=(atualizacao,),
@@ -171,7 +175,7 @@ class TelaPrincipal(App):
         try:
 
             service = AtualizacaoService()
-            caminho = service.baixar_instalador(atualizacao)
+            caminho = service.baixar_instalador(atualizacao, ao_progredir=self._progresso_download)
 
         except Exception as erro:
 
@@ -187,17 +191,36 @@ class TelaPrincipal(App):
             lambda dt: self._download_concluido(caminho)
         )
 
+    def _progresso_download(self, porcentagem, mensagem):
+
+        Clock.schedule_once(
+            lambda dt, p=porcentagem, m=mensagem:
+            self._atualizar_progresso_download(p, m)
+        )
+
+
+    def _atualizar_progresso_download(self, porcentagem, mensagem):
+
+        if not self.popup_download:
+            return
+
+        self.popup_download.status = mensagem
+
+        Animation.cancel_all(self.popup_download, 'valor')
+
+        Animation(valor=porcentagem, duration=0.15).start(self.popup_download)
 
     def _download_falhou(self, erro):
 
         self.download_em_andamento = False
-
+        
+        if self.popup_download:
+            self.popup_download.dismiss()
+            self.popup_download = None
+        
         print(f"Erro no download da atualização: {erro}")
 
-        mensagem_erro(
-            "Falha na atualização",
-            "Não foi possível baixar ou validar o instalador.\nTente novamente mais tarde."
-        )
+        mensagem_erro("Falha na atualização","Não foi possível baixar ou validar o instalador.\nTente novamente mais tarde.")
 
 
     def _download_concluido(self, caminho):
@@ -205,8 +228,17 @@ class TelaPrincipal(App):
         self.download_em_andamento = False
         self.instalador_baixado = caminho
 
-        mensagem_confirmacao( "Download concluído", "O instalador foi baixado e validado.\nO SISREPO será fechado para realizar a atualização. Deseja continuar?", ao_confirmar=self._iniciar_instalacao_atualizacao,
-        texto_botao="Instalar agora")
+        if self.popup_download:
+
+            self.popup_download.status = "Download concluído e verificado!"
+
+            Animation(valor=100, duration=0.3).start(self.popup_download)
+
+            Clock.schedule_once(self._fechar_popup_download, 0.8)
+
+        else:
+            self._mostrar_confirmacao_instalacao()
+
 
     def _iniciar_instalacao_atualizacao(self):
 
@@ -229,6 +261,23 @@ class TelaPrincipal(App):
 
         # Encerra o SISREPO para permitir a substituição dos arquivos
         self.stop()
+
+    def _fechar_popup_download(self, dt):
+
+        if self.popup_download:
+            self.popup_download.dismiss()
+            self.popup_download = None
+
+        self._mostrar_confirmacao_instalacao()
+
+
+    def _mostrar_confirmacao_instalacao(self):
+
+        mensagem_confirmacao(
+            "Download concluído",
+            "O instalador foi baixado e validado.\nO SISREPO será fechado para realizar a atualização. Deseja continuar?",
+            ao_confirmar=self._iniciar_instalacao_atualizacao,
+            texto_botao="Instalar agora")
 
     def iniciar_conexao(self):
         ids = self.root.ids
